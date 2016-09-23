@@ -1,0 +1,53 @@
+<h1>{{title}}</h1>
+<button class="btn btn-default" (click)="addNewEnvProp()"><span class="glyphicon glyphicon-plus"></span></button>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Action</th>
+            <th>Environment</th>
+            <th>Key</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let envProp of envProps; let index = index;">
+            <template [ngIf]="envProp.isEditing">
+                <th scope="row">
+                    <button class="btn btn-danger" (click)="deleteEnvProp(index);"><span class="glyphicon glyphicon-minus"></span></button>
+                    <button class="btn btn-success" (click)="envProp.isEditing=false;"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button class="btn btn-primary" (click)="copyEnvProp(envProp)"><span class="glyphicon">Copy</span></button>
+                </th>
+                <td>
+                    <select class="form-control" [(ngModel)]="envProp.action">
+              <option>Add</option>              
+              <option>Edit</option>              
+              <option>Remove</option>              
+            </select>
+                </td>
+                <td>
+                    <select class="form-control" [(ngModel)]="envProp.env">
+              <option>QAT</option>              
+              <option>UAT</option>              
+              <option>PRD</option>              
+            </select>
+                </td>
+                <td><input type="text" [(ngModel)]="envProp.key" class="form-control" placeholder="Key"></td>
+                <td *ngIf="envProp.action!=='Remove'"><input type="text" [(ngModel)]="envProp.value" class="form-control" placeholder="Value"></td>
+            </template>
+            <template [ngIf]="!envProp.isEditing">
+                <th scope="row">
+                    <button class="btn btn-default"><span class="glyphicon glyphicon-minus"></span></button>
+                    <button class="btn btn-default" (click)="envProp.isEditing=true"><span class="glyphicon glyphicon-pencil"></span></button>
+                    <button class="btn btn-default"><span class="glyphicon glyphicon-copy"></span></button>
+                </th>
+                <td>{{envProp.action}}</td>
+
+                <td>{{envProp.env}}</td>
+                <td>{{envProp.key}}</td>
+                <td>{{envProp.value}}</td>
+            </template>
+        </tr>
+    </tbody>
+</table>
+<preview-deployment-guide [envProps]="envProps"></preview-deployment-guide>
