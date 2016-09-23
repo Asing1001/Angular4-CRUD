@@ -37,9 +37,9 @@
             </template>
             <template [ngIf]="!envProp.isEditing">
                 <th scope="row">
-                    <button class="btn btn-default"><span class="glyphicon glyphicon-minus"></span></button>
-                    <button class="btn btn-default" (click)="envProp.isEditing=true"><span class="glyphicon glyphicon-pencil"></span></button>
-                    <button class="btn btn-default"><span class="glyphicon glyphicon-copy"></span></button>
+                    <button class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span></button>
+                    <button class="btn btn-success" (click)="envProp.isEditing=true"><span class="glyphicon glyphicon-pencil"></span></button>
+                    <button class="btn btn-primary"><span class="glyphicon glyphicon-copy"></span></button>
                 </th>
                 <td>{{envProp.action}}</td>
 

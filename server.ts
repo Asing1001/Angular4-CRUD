@@ -7,7 +7,7 @@ var app = express();
 app.use(express.static(__dirname));
 app.get('/api/envProps', (req, res) => {
   res.sendFile(path.join(__dirname, 'data/envProps.json'));
-})
+});
 
 
 app.listen(3000, function () {
