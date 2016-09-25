@@ -1,12 +1,20 @@
 import { Component, OnInit, Input } from '@angular/core';
-import {EnvProperty} from './interfaces/EnvProperty'
+import { EnvProperty } from './interfaces/EnvProperty'
 
 @Component({
     moduleId: module.id,
     selector: 'preview-deployment-guide',
-    template:`
+    template: `
 <ul>
-    <p *ngFor="let envProp of envProps">
+    <p *ngFor="let envProp of qatEnvProps">
+        <{{envProp.key}}>{{envProp.value}}
+            <{{envProp.key}}/>
+    </p>
+    <p *ngFor="let envProp of uatEnvProps">
+        <{{envProp.key}}>{{envProp.value}}
+            <{{envProp.key}}/>
+    </p>
+    <p *ngFor="let envProp of prodEnvProps">
         <{{envProp.key}}>{{envProp.value}}
             <{{envProp.key}}/>
     </p>
@@ -14,9 +22,33 @@ import {EnvProperty} from './interfaces/EnvProperty'
 })
 export class PreviewComponent implements OnInit {
     @Input()
-    envProps:EnvProperty;
-    
+    envProps: EnvProperty[];
+    qatEnvProps = [];
+    uatEnvProps = [];
+    prodEnvProps = [];
+
     constructor() { }
 
-    ngOnInit() { }
+    ngOnInit() {
+        
+    }
+
+    ngOnChanges(){
+        if(!this.envProps){
+            return;
+        }
+        this.envProps.forEach(envProp => {
+            switch (envProp.env) {
+                case 'QAT':
+                    this.qatEnvProps.push(envProp);
+                    break;
+                case 'UAT':
+                    this.uatEnvProps.push(envProp);
+                    break;
+                case 'PROD':
+                    this.prodEnvProps.push(envProp);
+                    break;
+            }
+        })
+    }
 }

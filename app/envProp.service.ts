@@ -15,8 +15,8 @@ export class EnvPropService {
         //.catch(this.handleError);
     }
 
-    saveEnvProps(envProp): Promise<any> {
-        return this.http.post(this.envPropsApiUrl,envProp)
+    saveEnvProps(envProps:EnvProperty[]): Promise<any> {
+        return this.http.post(this.envPropsApiUrl,envProps)
             .toPromise()
             .then(response => response.json())
         //.catch(this.handleError);

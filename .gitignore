@@ -1,4 +1,5 @@
 app/**/*.js
+data/
 *.map
 server.js
 typings/

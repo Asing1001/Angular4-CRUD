@@ -5,19 +5,20 @@ import { AppComponent } from './app.component';
 import { PreviewComponent } from './preview.component';
 import { MapToIterable } from './app.pipe';
 import { HttpModule }    from '@angular/http';
+import {ToasterModule} from 'angular2-toaster';
 
 @NgModule({
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    ToasterModule
   ],
   declarations: [
     AppComponent,
     PreviewComponent,
     MapToIterable
   ],
-  //providers:[HttpModule],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
