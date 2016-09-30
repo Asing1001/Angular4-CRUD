@@ -1,6 +1,5 @@
 <toaster-container></toaster-container>
-<h1>{{title}}</h1>
-<button class="btn btn-default" (click)="addNewEnvProp()"><span class="glyphicon glyphicon-plus"></span></button>
+<button class="btn btn-raised btn-default" (click)="addNewEnvProp()"><span class="glyphicon glyphicon-plus"></span></button>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -15,8 +14,8 @@
         <tr *ngFor="let envProp of envProps; let index = index;">
             <template [ngIf]="envProp.isEditing">
                 <th scope="row">
-                    <button class="btn btn-danger" (click)="envProp.isEditing=false;"><span class="glyphicon glyphicon-stop"></span></button>
-                    <button class="btn btn-success" (click)="envProp.isEditing=false;saveEnvProps();"><span class="glyphicon glyphicon-ok"></span></button>
+                    <button class="btn btn-raised btn-danger" (click)="envProp.isEditing=false;"><span class="glyphicon glyphicon-stop"></span></button>
+                    <button class="btn btn-raised btn-success" (click)="envProp.isEditing=false;saveEnvProps();"><span class="glyphicon glyphicon-ok"></span></button>
                 </th>
                 <td>
                     <select class="form-control" [(ngModel)]="envProp.action">
@@ -37,9 +36,9 @@
             </template>
             <template [ngIf]="!envProp.isEditing">
                 <th scope="row">
-                    <button class="btn btn-danger" (click)="deleteEnvProp(index);"><span class="glyphicon glyphicon-minus"></span></button>
-                    <button class="btn btn-success" (click)="envProp.isEditing=true"><span class="glyphicon glyphicon-pencil"></span></button>
-                    <button class="btn btn-primary" (click)="copyEnvProp(envProp)"><span class="glyphicon">Copy</span></button>                    
+                    <button class="btn btn-raised btn-danger" (click)="deleteEnvProp(index);"><span class="glyphicon glyphicon-minus"></span></button>
+                    <button class="btn btn-raised btn-success" (click)="envProp.isEditing=true"><span class="glyphicon glyphicon-pencil"></span></button>
+                    <button class="btn btn-raised btn-primary" (click)="copyEnvProp(envProp)"><span class="glyphicon">Copy</span></button>                    
                 </th>
                 <td>{{envProp.action}}</td>
 

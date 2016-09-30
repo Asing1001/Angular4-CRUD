@@ -17,6 +17,10 @@ app.post('/api/envProps', (req, res) => {
   fs.writeFileAsync(envPropsPath, JSON.stringify(req.body,null,2)).then(()=>res.send({success:true}));
 });
 
+app.get('/*',(req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
 });
