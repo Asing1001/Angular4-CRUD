@@ -1,4 +1,4 @@
-app/**/*.js
+dist/
 data/
 *.map
 server.js

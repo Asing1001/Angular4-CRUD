@@ -5,7 +5,8 @@ import * as bodyParser from "body-parser";
 
 const app = express();
 
-app.use(express.static(__dirname));
+app.use('/node_modules',express.static(path.join(__dirname,'node_modules')));
+app.use(express.static(path.join(__dirname,'dist')));
 app.use(bodyParser.json());
 app.get('/api/envProps', (req, res) => {
   res.sendFile(path.join(__dirname, 'data/envProps.json'));
@@ -18,9 +19,10 @@ app.post('/api/envProps', (req, res) => {
 });
 
 app.get('/*',(req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+let port = process.env.PORT || 3001;
+app.listen(port, function () {
+  console.log('Example app listening on port',port);
 });

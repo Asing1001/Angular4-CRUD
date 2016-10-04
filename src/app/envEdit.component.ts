@@ -6,7 +6,7 @@ import { ToasterService } from 'angular2-toaster';
 @Component({
   selector: 'env-edit',
   providers: [EnvPropService, ToasterService],
-  templateUrl: 'public/templates/envEdit.html'
+  templateUrl: 'envEdit.html'
 })
 
 export class EnvEditComponent implements OnInit {
@@ -38,7 +38,7 @@ export class EnvEditComponent implements OnInit {
   saveEnvProps() {
     let data = this.envProps.map(({env,key,value,action})=>{return {env,key,value,action}}); 
     this.envPropService.saveEnvProps(data).then(
-      (isSuccess) => this.toasterService.pop('success', 'Upadate success!')
+      (isSuccess) => this.toasterService.pop('info', 'Upadate success!')
     );
   }
 }

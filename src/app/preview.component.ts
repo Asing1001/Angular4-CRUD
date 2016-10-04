@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { EnvProperty } from './interfaces/EnvProperty'
 
 @Component({
-    moduleId: module.id,
     selector: 'preview-deployment-guide',
     template: `
 <ul>
