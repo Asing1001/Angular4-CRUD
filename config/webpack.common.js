@@ -31,13 +31,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: helpers.root('src', 'app'),
-        loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
-      },
-      {
-        test: /\.css$/,
-        include: helpers.root('src', 'app'),
-        loader: 'raw'
+        loader: ExtractTextPlugin.extract("style-loader", "css-loader")
       }
     ]
   },
@@ -47,12 +41,14 @@ module.exports = {
         $: 'jquery',
         jQuery: 'jquery',
         'window.jQuery': 'jquery',
-        'root.jQuery': 'jquery'
+        'root.jQuery': 'jquery',
+        'window.moment': 'moment',
+        moment:'moment'
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: ['app', 'vendor', 'polyfills']
     }),
-
+               
     new HtmlWebpackPlugin({
       template: './src/index.html'
     }),
@@ -60,6 +56,6 @@ module.exports = {
     new CopyWebpackPlugin([{
         from: 'src/assets',
         to: 'assets'
-    }]),
+    }])
   ]
 };

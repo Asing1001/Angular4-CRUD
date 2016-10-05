@@ -5,7 +5,14 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: 'navBar.html'
 })
 export class NavBarComponent implements OnInit {
-    constructor() { }
+    dateRange;
+    constructor() {
+        this.dateRange = {};    
+    }
 
     ngOnInit() { }
+
+    search({from,to}){
+        debugger;
+    }    
 }

@@ -9,6 +9,7 @@ import { ToasterModule } from 'angular2-toaster';
 import { routing } from './app.routing';
 import { EnvEditComponent } from './envEdit.component';
 import { NavBarComponent } from './navBar.component';
+import { DatePickertDirective } from './datePicker.directive'
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { NavBarComponent } from './navBar.component';
     PreviewComponent,
     EnvEditComponent,
     NavBarComponent,
-    MapToIterable
+    MapToIterable,
+    DatePickertDirective
   ],
   bootstrap: [AppComponent]
 })
