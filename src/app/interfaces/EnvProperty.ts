@@ -3,5 +3,6 @@ export interface EnvProperty {
   action: string;
   key?: string;
   value?: string;
-  isEditing?: boolean;
+  date?: string;
+  isEditing?: boolean;   
 }

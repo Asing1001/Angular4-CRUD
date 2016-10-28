@@ -12,14 +12,11 @@ export class EnvPropService {
         return this.http.get(this.envPropsApiUrl)
             .toPromise()
             .then(response => response.json())
-        //.catch(this.handleError);
     }
 
     saveEnvProps(envProps:EnvProperty[]): Promise<any> {
         return this.http.post(this.envPropsApiUrl,envProps)
             .toPromise()
             .then(response => response.json())
-        //.catch(this.handleError);
-    }  
-    
+    }
 }

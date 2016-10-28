@@ -11,17 +11,7 @@
     <div class="navbar-collapse collapse navbar-inverse-collapse">
       <ul class="nav navbar-nav">
         <li [routerLinkActive]="['active']"><a routerLink="/envedit">Editor</a></li>
-        <li><a href="javascript:void(0)">Preview</a></li>
-        <li><a href="javascript:void(0)">Calendar</a></li>
-      </ul>
-      <form class="navbar-form navbar-left">
-        <div class="form-group">
-          <input datePicker type="text" class="form-control" name="datefrom" [(ngModel)]="dateRange.from" (ngModelChange)="dateRange.from=$event">
-          ~
-          <input datePicker type="text" class="form-control" name="dateto" [(ngModel)]="dateRange.to" (ngModelChange)="dateRange.to=$event">
-          <a href="javascript:void(0)" (click)="search(dateRange)"><i class="material-icons">refresh</i></a>
-        </div>
-      </form>
+      </ul>     
     </div>
   </div>
 </div>

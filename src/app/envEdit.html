@@ -1,52 +1,80 @@
 <toaster-container></toaster-container>
+<div class="row">
+    <form class="form-inline col-xs-12">
+        <div class="form-group label-floating">
+            <label class="control-label" for="from">From</label>
+            <div class="input-group">
+                <input datePicker type="text" class="form-control" name="from" [(ngModel)]="dateRange.from" (ngModelChange)="dateRange.from=$event;filterEnvProps()">
+                <span class="input-group-btn">                
+              </span>
+            </div>
+        </div>
+        <div class="form-group label-floating">
+            <label class="control-label" for="to">To</label>
+            <div class="input-group">
+                <input datePicker type="text" class="form-control" name="to" [(ngModel)]="dateRange.to" (ngModelChange)="dateRange.to=$event;filterEnvProps();">
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-fab btn-fab-mini" (click)="filterEnvProps()">
+                  <i class="material-icons">refresh</i>
+                </button>
+              </span>
+            </div>
+        </div>
+    </form>
+</div>
 <button class="btn btn-raised btn-default" (click)="addNewEnvProp()"><span class="glyphicon glyphicon-plus"></span></button>
+<button class="btn btn-raised btn-default glyphicon-size" (click)="downloadDeploymentGuide()">Download</button>
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>#</th>
-            <th>Action</th>
-            <th>Environment</th>
-            <th>Key</th>
-            <th>Value</th>
+            <th class="col-xs-3"></th>
+            <th class="col-xs-1">Date</th>
+            <th class="col-xs-1">Action</th>
+            <th class="col-xs-1">Environment</th>
+            <th class="col-xs-3">Key</th>
+            <th class="col-xs-3">Value</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let envProp of envProps; let index = index;">
+        <tr *ngFor="let envProp of filteredEnvProps; let index = index;">
             <template [ngIf]="envProp.isEditing">
-                <th scope="row">
-                    <button class="btn btn-raised btn-danger" (click)="envProp.isEditing=false;"><span class="glyphicon glyphicon-stop"></span></button>
-                    <button class="btn btn-raised btn-success" (click)="envProp.isEditing=false;saveEnvProps();"><span class="glyphicon glyphicon-ok"></span></button>
-                </th>
-                <td>
-                    <select class="form-control" [(ngModel)]="envProp.action">
-              <option>Add</option>              
-              <option>Edit</option>              
-              <option>Remove</option>              
-            </select>
-                </td>
-                <td>
-                    <select class="form-control" [(ngModel)]="envProp.env">
-              <option>QAT</option>              
-              <option>UAT</option>              
-              <option>PRD</option>              
-            </select>
-                </td>
-                <td><input type="text" [(ngModel)]="envProp.key" class="form-control" placeholder="Key"></td>
-                <td *ngIf="envProp.action!=='Remove'"><input type="text" [(ngModel)]="envProp.value" class="form-control" placeholder="Value"></td>
-            </template>
+				<td>
+					<button class="btn btn-raised btn-danger" (click)="envProp.isEditing=false;revertEnvProp(envProp)"><span class="glyphicon glyphicon-stop"></span></button>
+					<button class="btn btn-raised btn-success" (click)="envProp.isEditing=false;updateEnvProps();"><span class="glyphicon glyphicon-ok"></span></button>
+				</td>
+				<td>
+					<input datePicker type="text" class="form-control" name="date" [(ngModel)]="envProp.date" (ngModelChange)="envProp.date=$event">
+				</td>
+				<td>
+					<select class="form-control" [(ngModel)]="envProp.action">
+						<option>Add</option>              
+						<option>Edit</option>              
+						<option>Remove</option>              
+					</select>
+				</td>
+				<td>
+					<select class="form-control" [(ngModel)]="envProp.env">
+						<option>QAT</option>              
+						<option>UAT</option>              
+						<option>PRD</option>              
+					</select>
+				</td>
+				<td><input type="text" [(ngModel)]="envProp.key" class="form-control" placeholder="Key"></td>
+				<td *ngIf="envProp.action!=='Remove'"><input type="text" [(ngModel)]="envProp.value" class="form-control" placeholder="Value"></td>
+			</template>
             <template [ngIf]="!envProp.isEditing">
-                <th scope="row">
-                    <button class="btn btn-raised btn-danger" (click)="deleteEnvProp(index);"><span class="glyphicon glyphicon-minus"></span></button>
-                    <button class="btn btn-raised btn-success" (click)="envProp.isEditing=true"><span class="glyphicon glyphicon-pencil"></span></button>
-                    <button class="btn btn-raised btn-primary" (click)="copyEnvProp(envProp)"><span class="glyphicon">Copy</span></button>                    
-                </th>
-                <td>{{envProp.action}}</td>
-
-                <td>{{envProp.env}}</td>
-                <td>{{envProp.key}}</td>
-                <td>{{envProp.value}}</td>
-            </template>
+				<td>
+					<button class="btn btn-raised btn-danger" (click)="deleteEnvProp(envProp);"><span class="glyphicon glyphicon-minus"></span></button>
+					<button class="btn btn-raised btn-success" (click)="envProp.original=copyObject(envProp);envProp.isEditing=true;"><span class="glyphicon glyphicon-pencil"></span></button>
+					<button class="btn btn-raised btn-primary glyphicon-size" (click)="copyEnvProp(envProp)">COPY</button>
+				</td>
+				<td>{{envProp.date}}</td>
+				<td>{{envProp.action}}</td>
+				<td>{{envProp.env}}</td>
+				<td>{{envProp.key}}</td>
+				<td>{{envProp.value}}</td>
+			</template>
         </tr>
     </tbody>
 </table>
-<preview-deployment-guide [envProps]="envProps"></preview-deployment-guide>
+<preview-deployment-guide [envProps]="filteredEnvProps" style="white-space:pre-wrap"></preview-deployment-guide>
