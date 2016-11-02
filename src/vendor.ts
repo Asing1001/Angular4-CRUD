@@ -27,4 +27,3 @@ import 'bootstrap-material-design/dist/css/bootstrap-material-design.min.css';
 import 'bootstrap-material-design/dist/css/ripples.min.css';
 import 'angular2-toaster/lib/toaster.css';
 import './vendors/bootstrap-material-datetimepicker/styles.css'
-import './styles.css';

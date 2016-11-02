@@ -8,6 +8,7 @@ body {
 
 .navbar-form a {
   color: rgba(255,255,255, 0.84);
+  line-height: 1;
 }
 
 .glyphicon-size {
