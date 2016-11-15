@@ -8,10 +8,8 @@ import { EnvProperty } from './interfaces/EnvProperty'
 export class PreviewComponent implements OnInit {
     @Input()
     envProps: EnvProperty[];
+    envPropsObj = {};
     previousEnvProps: EnvProperty[];
-    qatEnvProps = [];
-    uatEnvProps = [];
-    prodEnvProps = [];
     content = '';
     constructor() { }
 
@@ -31,50 +29,59 @@ export class PreviewComponent implements OnInit {
     }
 
     private groupEnvProps() {
-        [this.qatEnvProps, this.uatEnvProps, this.prodEnvProps] = [[], [], []];
-        this.envProps.forEach(envProp => {
-            switch (envProp.env) {
-                case 'QAT':
-                    this.qatEnvProps.push(envProp);
-                    break;
-                case 'UAT':
-                    this.uatEnvProps.push(envProp);
-                    break;
-                case 'PROD':
-                    this.prodEnvProps.push(envProp);
-                    break;
+        this.envPropsObj = this.groupBy(this.envProps, 'env');
+        for (let key in this.envPropsObj) {
+            this.envPropsObj[key] = this.groupBy(this.envPropsObj[key], 'action')
+        }
+    }
+
+    private groupBy(array: Array<any>, key) {
+        let result = {};
+        array.forEach(obj => {
+            let resultKey = obj[key];
+            if (!result[resultKey]) {
+                result[resultKey] = [];
             }
+
+            result[resultKey].push(obj);
         })
+        return result;
     }
 
     private generateContent() {
         this.content =
             `
-1) Modify File: /Build/lib/Environment.properties
-${this.getEnvPropsString('QAT', this.qatEnvProps)}
-${this.getEnvPropsString('UAT', this.uatEnvProps)}
-${this.getEnvPropsString('PROD', this.prodEnvProps)}
-2) Modify File /Build/lib/Extended.targets:
-${this.getExtendTarget('QAT', this.qatEnvProps)}
-${this.getExtendTarget('UAT', this.uatEnvProps)}
-${this.getExtendTarget('PROD', this.prodEnvProps)}
+1) Modify File /Build/lib/Environment.properties: 
+${this.getEnvPropsString('QAT')}${this.getEnvPropsString('UAT')}${this.getEnvPropsString('PRD')}
+2) Modify File /Build/lib/Extended.targets: 
+${this.getExtendTarget('QAT')}${this.getExtendTarget('UAT')}${this.getExtendTarget('PRD')}
 `
     }
 
-    private getEnvPropsString(environment, envProps) {
+    private getEnvPropsString(environment) {
         let result = '';
-        if (envProps.length > 0) {
+        let targetEnvProps = this.envPropsObj[environment];
+        if (targetEnvProps) {
             result += `For ${environment}:\r\n`;
-            envProps.forEach(({key, value}: EnvProperty) => { result += `<${key}>${value}</${key}>\r\n` })
+            for (let action in targetEnvProps) {
+                result += `${action}:\r\n`;
+                targetEnvProps[action].forEach(({key, value}: EnvProperty) => { result += `   <${key}>${value?value:''}</${key}>\r\n` })
+            }
+            result += '\r\n';
         }
         return result;
     }
 
-    private getExtendTarget(environment, envProps) {
+    private getExtendTarget(environment) {
         let result = '';
-        if (envProps.length > 0) {
+        let targetEnvProps = this.envPropsObj[environment];
+        if (targetEnvProps) {
             result += `For ${environment}:\r\n`;
-            envProps.forEach(({key}: EnvProperty) => { result += `<FileUpdate Regex="\\$\\(${key}\\)" ReplacementText="$(${key})" Files="@(ConfigFile)" Multiline="true" IgnoreCase="true"/>\r\n` })
+            for (let action in targetEnvProps) {
+                result += `${action}:\r\n`;
+                targetEnvProps[action].forEach(({key}: EnvProperty) => { result += `   <FileUpdate Regex="\\$\\(${key}\\)" ReplacementText="$(${key})" Files="@(ConfigFile)" Multiline="true" IgnoreCase="true"/>\r\n` })
+            }
+            result += '\r\n';
         }
         return result;
     }

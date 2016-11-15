@@ -33,11 +33,19 @@ export class EnvEditComponent implements OnInit {
   }
 
   revertEnvProp(envProp) {
-    envProp.action = envProp.original.action;
-    envProp.date = envProp.original.date;
-    envProp.env = envProp.original.env;
-    envProp.key = envProp.original.key;
-    envProp.value = envProp.original.value;
+    let preValue = envProp.original;
+    let isNewEnv = typeof preValue === 'undefined';
+    if (isNewEnv) {
+      let index = this.envProps.indexOf(envProp);
+      this.envProps.splice(index, 1);
+      this.filterEnvProps();
+    } else {
+      envProp.action = preValue.action;
+      envProp.date = preValue.date;
+      envProp.env = preValue.env;
+      envProp.key = preValue.key;
+      envProp.value = preValue.value;
+    }
   }
 
   copyEnvProp(envProp): void {
@@ -59,7 +67,7 @@ export class EnvEditComponent implements OnInit {
   }
 
   addNewEnvProp() {
-    this.envProps.push({ env: 'QAT', action: 'Add', isEditing: true, date: this.dateRange.from });
+    this.envProps.push({ env: 'QAT', action: 'Add', isEditing: true, date: this.dateRange.to });
     this.filterEnvProps();
   }
 
