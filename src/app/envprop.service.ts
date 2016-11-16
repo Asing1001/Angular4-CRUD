@@ -8,14 +8,14 @@ export class EnvPropService {
     private headers = new Headers({ 'Content-Type': 'application/json' });
     private envPropsApiUrl = 'api/envProps';
     constructor(private http: Http) { }
-    getEnvProps(): Promise<EnvProperty[]> {
-        return this.http.get(this.envPropsApiUrl)
+    getEnvProps(projectName): Promise<EnvProperty[]> {
+        return this.http.get(this.envPropsApiUrl+'?projectName='+projectName)
             .toPromise()
-            .then(response => response.json())
+            .then(response => { return response.json()})
     }
 
-    saveEnvProps(envProps:EnvProperty[]): Promise<any> {
-        return this.http.post(this.envPropsApiUrl,envProps)
+    saveEnvProps(data): Promise<any> {
+        return this.http.post(this.envPropsApiUrl,data)
             .toPromise()
             .then(response => response.json())
     }

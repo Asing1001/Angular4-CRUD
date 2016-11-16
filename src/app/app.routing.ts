@@ -4,12 +4,12 @@ import { EnvEditComponent }      from './envEdit.component';
 
 const appRoutes: Routes = [
   {
-    path: 'envedit',
+    path: 'envedit/:project',
     component: EnvEditComponent
   },
   {
     path: '',
-    redirectTo: '/envedit',
+    redirectTo: '/envedit/188',
     pathMatch :'full'
   }
 ];

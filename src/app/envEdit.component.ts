@@ -3,6 +3,7 @@ import { EnvProperty } from './interfaces/EnvProperty';
 import { EnvPropService } from './envProp.service';
 import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'env-edit',
@@ -11,18 +12,23 @@ import * as moment from 'moment';
 })
 
 export class EnvEditComponent implements OnInit {
+  projectName: string = '';
   envProp: EnvProperty;
   envProps: Array<EnvProperty>;
   filteredEnvProps: Array<EnvProperty>;
   dateRange = { from: moment().subtract(7, 'days').format("YYYY-MM-DD"), to: moment().format("YYYY-MM-DD") };
 
-  constructor(private envPropService: EnvPropService, private toasterService: ToasterService) {
+
+  constructor(private route: ActivatedRoute, private envPropService: EnvPropService, private toasterService: ToasterService) {
   }
 
   ngOnInit() {
-    this.envPropService.getEnvProps().then(envProps => {
-      this.envProps = envProps;
-      this.filterEnvProps();
+    this.route.params.subscribe(params => {
+      this.projectName = params['project'];
+      this.envPropService.getEnvProps(this.projectName).then(envProps => {
+        this.envProps = envProps;
+        this.filterEnvProps();
+      });
     });
   }
 
@@ -72,7 +78,10 @@ export class EnvEditComponent implements OnInit {
   }
 
   updateEnvProps() {
-    let data = this.envProps.map(({date, env, key, value, action}) => { return { date, env, key, value, action } });
+    let data = {
+      projectName:this.projectName,
+      envProps:this.envProps.map(({date, env, key, value, action}) => { return { date, env, key, value, action } })
+    }
     this.envPropService.saveEnvProps(data).then(
       (isSuccess) => this.toasterService.pop('info', 'Upadate success!')
     );
