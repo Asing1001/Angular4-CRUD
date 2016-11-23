@@ -50,12 +50,9 @@ export class PreviewComponent implements OnInit {
 
     private generateContent() {
         this.content =
-            `
-1) Modify File /Build/lib/Environment.properties: 
-${this.getEnvPropsString('QAT')}${this.getEnvPropsString('UAT')}${this.getEnvPropsString('PRD')}
-2) Modify File /Build/lib/Extended.targets: 
-${this.getExtendTarget('QAT')}${this.getExtendTarget('UAT')}${this.getExtendTarget('PRD')}
-`
+`1) Modify File /Build/lib/Environment.properties:\r\n${this.getEnvPropsString('QAT')}${this.getEnvPropsString('UAT')}${this.getEnvPropsString('PRD')}`
++
+`2) Modify File /Build/lib/Extended.targets:\r\n${this.getExtendTarget('QAT')}${this.getExtendTarget('UAT')}${this.getExtendTarget('PRD')}`
     }
 
     private getEnvPropsString(environment) {
