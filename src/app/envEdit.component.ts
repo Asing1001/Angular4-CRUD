@@ -16,7 +16,7 @@ export class EnvEditComponent implements OnInit {
   envProp: EnvProperty;
   envProps: Array<EnvProperty>;
   filteredEnvProps: Array<EnvProperty>;
-  dateRange = { from: moment().subtract(7, 'days').format("YYYY-MM-DD"), to: moment().format("YYYY-MM-DD") };
+  dateRange = { from: moment().subtract(6, 'days').format("YYYY-MM-DD"), to: moment().add(1, 'days').format("YYYY-MM-DD") };
 
 
   constructor(private route: ActivatedRoute, private envPropService: EnvPropService, private toasterService: ToasterService) {
@@ -51,6 +51,7 @@ export class EnvEditComponent implements OnInit {
       envProp.env = preValue.env;
       envProp.key = preValue.key;
       envProp.value = preValue.value;
+      envProp.condition = preValue.condition;
     }
   }
 
@@ -79,8 +80,8 @@ export class EnvEditComponent implements OnInit {
 
   updateEnvProps() {
     let data = {
-      projectName:this.projectName,
-      envProps:this.envProps.map(({date, env, key, value, action}) => { return { date, env, key, value, action } })
+      projectName: this.projectName,
+      envProps: this.envProps.map(({date, env, key, value, action, condition}) => { return { date, env, key, value, action, condition } })
     }
     this.envPropService.saveEnvProps(data).then(
       (isSuccess) => this.toasterService.pop('info', 'Upadate success!')

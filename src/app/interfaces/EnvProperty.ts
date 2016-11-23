@@ -4,5 +4,6 @@ export interface EnvProperty {
   key?: string;
   value?: string;
   date?: string;
-  isEditing?: boolean;   
+  condition? : string;   
+  isEditing?: boolean;
 }

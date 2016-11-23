@@ -65,7 +65,11 @@ ${this.getExtendTarget('QAT')}${this.getExtendTarget('UAT')}${this.getExtendTarg
             result += `For ${environment}:\r\n`;
             for (let action in targetEnvProps) {
                 result += `${action}:\r\n`;
-                targetEnvProps[action].forEach(({key, value}: EnvProperty) => { result += `   <${key}>${value?value:''}</${key}>\r\n` })
+                targetEnvProps[action].forEach(({key, value, condition}: EnvProperty) => {
+                    result += condition? 
+                    `   <${key} Condition="'$(BU)'=='${condition}'">${value ? value : ''}</${key}>\r\n` : 
+                    `   <${key}>${value ? value : ''}</${key}>\r\n`
+                })
             }
             result += '\r\n';
         }
@@ -74,8 +78,11 @@ ${this.getExtendTarget('QAT')}${this.getExtendTarget('UAT')}${this.getExtendTarg
 
     private getExtendTarget(environment) {
         let result = '';
-        let targetEnvProps = this.envPropsObj[environment];
+        let targetEnvProps = Object.assign({}, this.envPropsObj[environment]);
         if (targetEnvProps) {
+            delete targetEnvProps['Edit'];
+        }
+        if (Object.keys(targetEnvProps).length !== 0) {
             result += `For ${environment}:\r\n`;
             for (let action in targetEnvProps) {
                 result += `${action}:\r\n`;

@@ -31,8 +31,9 @@
             <th class="col-xs-1">Deploy Date</th>
             <th class="col-xs-1">Action</th>
             <th class="col-xs-1">Environment</th>
-            <th class="col-xs-3">Key</th>
+            <th class="col-xs-2">Key</th>
             <th class="col-xs-3">Value</th>
+            <th class="col-xs-1">Condition</th>
         </tr>
     </thead>
     <tbody>
@@ -61,6 +62,13 @@
 				</td>
 				<td><input type="text" [(ngModel)]="envProp.key" class="form-control" placeholder="Key"></td>
 				<td *ngIf="envProp.action!=='Remove'"><input type="text" [(ngModel)]="envProp.value" class="form-control" placeholder="Value"></td>
+                <td>
+					<select class="form-control" [(ngModel)]="envProp.condition">
+						<option></option>              
+						<option>MOBILE</option>              
+						<option>SB1888</option>              
+					</select>
+				</td>
 			</template>
             <template [ngIf]="!envProp.isEditing">
 				<td>
@@ -73,6 +81,7 @@
 				<td>{{envProp.env}}</td>
 				<td>{{envProp.key}}</td>
 				<td>{{envProp.value}}</td>
+				<td>{{envProp.condition}}</td>
 			</template>
         </tr>
     </tbody>
