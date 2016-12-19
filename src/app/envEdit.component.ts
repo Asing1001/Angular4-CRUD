@@ -16,7 +16,7 @@ export class EnvEditComponent implements OnInit {
   envProp: EnvProperty;
   envProps: Array<EnvProperty>;
   filteredEnvProps: Array<EnvProperty>;
-  dateRange = { from: moment().subtract(6, 'days').format("YYYY-MM-DD"), to: moment().add(1, 'days').format("YYYY-MM-DD") };
+  dateRange = { from: moment().subtract(5, 'days').format("YYYY-MM-DD"), to: moment().add(1, 'days').format("YYYY-MM-DD") };
 
 
   constructor(private route: ActivatedRoute, private envPropService: EnvPropService, private toasterService: ToasterService) {
