@@ -33,8 +33,10 @@ export class EnvEditComponent implements OnInit {
   }
 
   filterEnvProps() {
-    this.filteredEnvProps = this.envProps.filter(({date}) => {
+    this.filteredEnvProps = this.envProps.filter(({ date }) => {
       return moment(this.dateRange.from).isSameOrBefore(date) && moment(this.dateRange.to).isSameOrAfter(date);
+    }).sort(({ date: dateA }, { date: dateB }) => {
+      return moment(dateB).diff(moment(dateA))
     })
   }
 
@@ -66,7 +68,10 @@ export class EnvEditComponent implements OnInit {
     return Object.assign({}, object);
   }
 
-  deleteEnvProp(envProp): void {
+  deleteEnvProp(envProp: EnvProperty): void {
+    if (!confirm("Confirm delete ?")) {
+      return
+    }
     let index = this.envProps.indexOf(envProp);
     this.envProps.splice(index, 1);
     this.filterEnvProps();
@@ -81,15 +86,15 @@ export class EnvEditComponent implements OnInit {
   updateEnvProps() {
     let data = {
       projectName: this.projectName,
-      envProps: this.envProps.map(({date, env, key, value, action, condition}) => { return { date, env, key, value, action, condition } })
+      envProps: this.envProps.map(({ date, env, key, value, action, condition }) => { return { date, env, key, value, action, condition } })
     }
     this.envPropService.saveEnvProps(data).then(
-      (isSuccess) => this.toasterService.pop('info', 'Upadate success!')
+      (isSuccess) => this.toasterService.pop('info', 'Upadate successfully !')
     );
   }
 
   downloadDeploymentGuide() {
-    this.download("Deployment_Guide.txt", $('preview-deployment-guide').text());
+    this.download(`${this.projectName}-${moment().format('YYYY-MM-DD')}-deploymentGuide`, $('preview-deployment-guide').text());
   }
 
   private download(filename, text) {

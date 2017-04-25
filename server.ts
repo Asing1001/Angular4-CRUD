@@ -11,8 +11,9 @@ app.use(bodyParser.json());
 app.get('/api/envProps', (req: express.Request, res: express.Response) => {
   let targetFile = path.join(__dirname, 'data/' + req.query.projectName + 'envProps.json');
   let isTargetFileExist = fs.existsSync(targetFile);
-  if(!isTargetFileExist){
-    fs.writeFileSync(targetFile,'[]');
+  if (!isTargetFileExist) {
+    fs.ensureFileSync(targetFile);
+    fs.writeFileSync(targetFile, '[]');
   }
   res.sendFile(targetFile);
 });
@@ -21,7 +22,7 @@ app.post('/api/envProps', (req, res) => {
   let targetFile = path.join(__dirname, 'data/' + req.body.projectName + 'envProps.json');
   console.log(req.body);
   fs.writeFile(targetFile, JSON.stringify(req.body.envProps, null, 2), (error) => {
-    if(error){
+    if (error) {
       console.log(error);
       return res.send({ success: false })
     }

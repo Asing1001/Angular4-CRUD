@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { EnvProperty } from './interfaces/EnvProperty'
+import * as moment from 'moment';
 
 @Component({
     selector: 'preview-deployment-guide',
@@ -8,7 +9,7 @@ import { EnvProperty } from './interfaces/EnvProperty'
 export class PreviewComponent implements OnInit {
     @Input()
     envProps: EnvProperty[];
-    envPropsObj = {};
+    envPropsGroupedByEnv = {};
     previousEnvProps: EnvProperty[];
     content = '';
     constructor() { }
@@ -29,10 +30,25 @@ export class PreviewComponent implements OnInit {
     }
 
     private groupEnvProps() {
-        this.envPropsObj = this.groupBy(this.envProps, 'env');
-        for (let key in this.envPropsObj) {
-            this.envPropsObj[key] = this.groupBy(this.envPropsObj[key], 'action')
+        this.envPropsGroupedByEnv = this.groupBy(this.envProps, 'env');
+        for (let key in this.envPropsGroupedByEnv) {
+            const singleEnvProps = this.getFinalStatus(this.envPropsGroupedByEnv[key]);
+            this.envPropsGroupedByEnv[key] = this.groupBy(singleEnvProps, 'action')
         }
+    }
+
+    private getFinalStatus(envArray: EnvProperty[]) {
+        let result: EnvProperty[] = [];
+        envArray.forEach((envProp: EnvProperty) => {
+            const matchedEnvProp = result.find(({ key }) => key === envProp.key);
+            if (matchedEnvProp) {
+                if (matchedEnvProp.action === 'Edit' && envProp.action === 'Add')
+                    matchedEnvProp.action = 'Add';
+            } else {
+                result.push(envProp);
+            }
+        });
+        return result;
     }
 
     private groupBy(array: Array<any>, key) {
@@ -50,22 +66,22 @@ export class PreviewComponent implements OnInit {
 
     private generateContent() {
         this.content =
-`1) Modify File /Build/lib/Environment.properties:\r\n${this.getEnvPropsString('QAT')}${this.getEnvPropsString('UAT')}${this.getEnvPropsString('PRD')}`
-+
-`2) Modify File /Build/lib/Extended.targets:\r\n${this.getExtendTarget('QAT')}${this.getExtendTarget('UAT')}${this.getExtendTarget('PRD')}`
+            `1) Modify File /Build/lib/Environment.properties:\r\n${this.getEnvPropsString('QAT')}${this.getEnvPropsString('UAT')}${this.getEnvPropsString('PRD')}`
+            +
+            `2) Modify File /Build/lib/Extended.targets:\r\n${this.getDistinctExtendTarget()}`
     }
 
     private getEnvPropsString(environment) {
         let result = '';
-        let targetEnvProps = this.envPropsObj[environment];
+        let targetEnvProps = this.envPropsGroupedByEnv[environment];
         if (targetEnvProps) {
             result += `For ${environment}:\r\n`;
             for (let action in targetEnvProps) {
                 result += `${action}:\r\n`;
-                targetEnvProps[action].forEach(({key, value, condition}: EnvProperty) => {
-                    result += condition? 
-                    `   <${key} Condition="'$(BU)'=='${condition}'">${value ? value : ''}</${key}>\r\n` : 
-                    `   <${key}>${value ? value : ''}</${key}>\r\n`
+                targetEnvProps[action].forEach(({ key, value, condition }: EnvProperty) => {
+                    result += condition ?
+                        `   <${key} Condition="'$(BU)'=='${condition}'">${value ? value : ''}</${key}>\r\n` :
+                        `   <${key}>${value ? value : ''}</${key}>\r\n`
                 })
             }
             result += '\r\n';
@@ -73,19 +89,16 @@ export class PreviewComponent implements OnInit {
         return result;
     }
 
-    private getExtendTarget(environment) {
+    private getDistinctExtendTarget() {
         let result = '';
-        let targetEnvProps = Object.assign({}, this.envPropsObj[environment]);
-        if (targetEnvProps) {
-            delete targetEnvProps['Edit'];
-        }
-        if (Object.keys(targetEnvProps).length !== 0) {
-            result += `For ${environment}:\r\n`;
-            for (let action in targetEnvProps) {
+        const envPropsWithoutEdit = this.envProps.filter(({ action }) => action !== 'Edit');
+        if (envPropsWithoutEdit.length > 0) {
+            const envPropsGroupByActions = this.groupBy(this.getFinalStatus(envPropsWithoutEdit), 'action');
+            for (let action in envPropsGroupByActions) {
                 result += `${action}:\r\n`;
-                targetEnvProps[action].forEach(({key}: EnvProperty) => { result += `   <FileUpdate Regex="\\$\\(${key}\\)" ReplacementText="$(${key})" Files="@(ConfigFile)" Multiline="true" IgnoreCase="true"/>\r\n` })
+                let keysSet = new Set(envPropsGroupByActions[action].map(({ key }) => key));
+                keysSet.forEach((key) => { result += `   <FileUpdate Regex="\\$\\(${key}\\)" ReplacementText="$(${key})" Files="@(ConfigFile)" Multiline="true" IgnoreCase="true"/>\r\n` })
             }
-            result += '\r\n';
         }
         return result;
     }
