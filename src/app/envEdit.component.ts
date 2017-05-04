@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { EnvProperty } from './interfaces/EnvProperty';
-import { EnvPropService } from './envProp.service';
 import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
 import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'env-edit',
-  providers: [EnvPropService, ToasterService],
+  providers: [ToasterService],
   templateUrl: 'envEdit.html'
 })
 
@@ -15,30 +14,26 @@ export class EnvEditComponent implements OnInit {
   projectName: string = '';
   envProp: EnvProperty;
   envProps: Array<EnvProperty>;
-  filteredEnvProps: Array<EnvProperty>;
   dateRange = { from: moment().subtract(5, 'days').format("YYYY-MM-DD"), to: moment().add(1, 'days').format("YYYY-MM-DD") };
 
 
-  constructor(private route: ActivatedRoute, private envPropService: EnvPropService, private toasterService: ToasterService) {
+  constructor(private route: ActivatedRoute, private toasterService: ToasterService) {
   }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.projectName = params['project'];
-      this.envPropService.getEnvProps(this.projectName).then(envProps => {
-        this.envProps = envProps;
-        this.filterEnvProps();
-      });
+      this.getEnvProps();
     });
   }
 
-  filterEnvProps() {
-    this.filteredEnvProps = this.envProps.filter(({ date }) => {
-      return moment(this.dateRange.from).isSameOrBefore(date) && moment(this.dateRange.to).isSameOrAfter(date);
-    }).sort(({ date: dateA }, { date: dateB }) => {
+  async getEnvProps() {
+    const envProps = await dpd.envprops.get({ projectName: this.projectName, date: { '$gte': this.dateRange.from, '$lte': this.dateRange.to } });
+    this.envProps = envProps.sort(({ date: dateA }, { date: dateB }) => {
       return moment(dateB).diff(moment(dateA))
     })
   }
+
 
   revertEnvProp(envProp) {
     let preValue = envProp.original;
@@ -46,51 +41,62 @@ export class EnvEditComponent implements OnInit {
     if (isNewEnv) {
       let index = this.envProps.indexOf(envProp);
       this.envProps.splice(index, 1);
-      this.filterEnvProps();
     } else {
       envProp.action = preValue.action;
       envProp.date = preValue.date;
       envProp.env = preValue.env;
       envProp.key = preValue.key;
       envProp.value = preValue.value;
-      envProp.condition = preValue.condition;
+      envProp.conditions = preValue.conditions;
+      delete envProp.original;
     }
   }
+
+  saveEnvProps(envProp){
+    dpd.envprops.post(envProp).then(msg => {
+      this.toasterService.pop('info', 'Upadate successfully !');
+    }).fail(error => {
+      this.toasterService.pop('error', error)
+      console.error('saveEnvProps got error:', error);
+    });
+  }  
 
   copyEnvProp(envProp): void {
     let copyEnvProp: EnvProperty = this.copyObject(envProp);
     copyEnvProp.isEditing = true;
+    delete copyEnvProp.id;
     this.envProps.push(copyEnvProp);
-    this.filterEnvProps();
   }
 
   copyObject(object) {
-    return Object.assign({}, object);
+    return JSON.parse(JSON.stringify(object));
   }
 
   deleteEnvProp(envProp: EnvProperty): void {
     if (!confirm("Confirm delete ?")) {
       return
     }
-    let index = this.envProps.indexOf(envProp);
-    this.envProps.splice(index, 1);
-    this.filterEnvProps();
-    this.updateEnvProps();
+    dpd.envprops.del({ id: envProp.id }).then(msg => {
+      this.toasterService.pop('info', 'delete successfully !');
+      const index = this.envProps.indexOf(envProp);
+      this.envProps.splice(index, 1);
+    }).fail(error => {
+      this.toasterService.pop('error', error)
+      console.error('deleteEnvProp got error:', error);
+    });
   }
 
   addNewEnvProp() {
-    this.envProps.push({ env: 'QAT', action: 'Add', isEditing: true, date: this.dateRange.to });
-    this.filterEnvProps();
+    this.envProps.push({ env: 'QAT', action: 'Add', isEditing: true, date: this.dateRange.to, conditions: [], projectName: this.projectName });
   }
 
-  updateEnvProps() {
-    let data = {
-      projectName: this.projectName,
-      envProps: this.envProps.map(({ date, env, key, value, action, condition }) => { return { date, env, key, value, action, condition } })
+  addCondition(envProp: EnvProperty) {
+    const defaultCondition = { key: '', value: '' };
+    if (envProp.conditions) {
+      envProp.conditions.push(defaultCondition);
+    } else {
+      envProp.conditions = [defaultCondition];
     }
-    this.envPropService.saveEnvProps(data).then(
-      (isSuccess) => this.toasterService.pop('info', 'Upadate successfully !')
-    );
   }
 
   downloadDeploymentGuide() {

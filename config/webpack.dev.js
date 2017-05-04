@@ -24,6 +24,14 @@ module.exports = webpackMerge(commonConfig, {
       '/api': {
         target: 'http://localhost:3001',
         secure: false
+      },
+      '/dpd.js': {
+        target: 'http://localhost:3001',
+        secure: false
+      },      
+      '/envprops': {
+        target: 'http://localhost:3001',
+        secure: false
       }
     }
   }

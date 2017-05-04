@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { EnvProperty } from './interfaces/EnvProperty'
+import { EnvProperty, KeyValPair } from './interfaces/EnvProperty'
 import * as moment from 'moment';
 
 @Component({
@@ -78,15 +78,21 @@ export class PreviewComponent implements OnInit {
             result += `For ${environment}:\r\n`;
             for (let action in targetEnvProps) {
                 result += `${action}:\r\n`;
-                targetEnvProps[action].forEach(({ key, value, condition }: EnvProperty) => {
-                    result += condition ?
-                        `   <${key} Condition="'$(BU)'=='${condition}'">${value ? value : ''}</${key}>\r\n` :
-                        `   <${key}>${value ? value : ''}</${key}>\r\n`
+                targetEnvProps[action].forEach(({ key, value, conditions }: EnvProperty) => {
+                    result += `   <${key}${this.getCondictionString(conditions)}>${value ? value : ''}</${key}>\r\n`
                 })
             }
             result += '\r\n';
         }
         return result;
+    }
+
+    getCondictionString(conditions: KeyValPair[]) {
+        if(!conditions || conditions.length===0){
+            return '';
+        }
+        const conditionString = conditions.map(({key,value})=>`'$(${key})'=='${value}'`).join(' AND ');
+        return ` Condition="${conditionString}"`
     }
 
     private getDistinctExtendTarget() {
