@@ -2,15 +2,16 @@
   "name": "deployment-guide",
   "version": "1.0.0",
   "scripts": {
-    "start": "npm run build && npm run dpd",
-    "dev": "concurrently \"npm run dpd\" \"npm run webpack\"",
-    "dpd": "dpd -p 3001",
+    "start": "npm run build && node server.js",
+    "dev": "concurrently \"node server.js\" \"npm run webpack\"",
     "webpack": "webpack-dev-server --inline --progress --port 3002",
     "build": "rimraf public && webpack --config config/webpack.prod.js --progress --profile --bail"
   },
   "license": "ISC",
   "dependencies": {
-    "deployd": "^0.8.9"
+    "deployd": "^0.8.9",
+    "express": "^4.15.2",
+    "socket.io": "^1.7.3"
   },
   "devDependencies": {
     "@angular/common": "2.0.0",

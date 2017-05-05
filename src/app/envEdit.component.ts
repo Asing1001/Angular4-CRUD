@@ -52,20 +52,22 @@ export class EnvEditComponent implements OnInit {
     }
   }
 
-  saveEnvProps(envProp){
-    dpd.envprops.post(envProp).then(msg => {
+  saveEnvProps(envProp) {
+    dpd.envprops.post(envProp).then(({id}:EnvProperty) => {
+      envProp.id = id;
+      envProp.isEditing = false;
       this.toasterService.pop('info', 'Upadate successfully !');
     }).fail(error => {
-      this.toasterService.pop('error', error)
+      this.toasterService.pop('error', JSON.stringify(error))
       console.error('saveEnvProps got error:', error);
     });
-  }  
+  }
 
-  copyEnvProp(envProp): void {
+  copyEnvProp(envProp, index): void {
     let copyEnvProp: EnvProperty = this.copyObject(envProp);
     copyEnvProp.isEditing = true;
     delete copyEnvProp.id;
-    this.envProps.push(copyEnvProp);
+    this.envProps.splice(index + 1, 0, copyEnvProp);
   }
 
   copyObject(object) {
@@ -77,11 +79,11 @@ export class EnvEditComponent implements OnInit {
       return
     }
     dpd.envprops.del({ id: envProp.id }).then(msg => {
-      this.toasterService.pop('info', 'delete successfully !');
+      this.toasterService.pop('info', 'Delete successfully !');
       const index = this.envProps.indexOf(envProp);
       this.envProps.splice(index, 1);
     }).fail(error => {
-      this.toasterService.pop('error', error)
+      this.toasterService.pop('error',  JSON.stringify(error))
       console.error('deleteEnvProp got error:', error);
     });
   }

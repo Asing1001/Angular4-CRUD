@@ -5,7 +5,7 @@
 			"name": "date",
 			"type": "string",
 			"typeLabel": "string",
-			"required": false,
+			"required": true,
 			"id": "date",
 			"order": 0
 		},
@@ -13,7 +13,7 @@
 			"name": "env",
 			"type": "string",
 			"typeLabel": "string",
-			"required": false,
+			"required": true,
 			"id": "env",
 			"order": 1
 		},
@@ -21,7 +21,7 @@
 			"name": "action",
 			"type": "string",
 			"typeLabel": "string",
-			"required": false,
+			"required": true,
 			"id": "action",
 			"order": 2
 		},
@@ -29,7 +29,7 @@
 			"name": "key",
 			"type": "string",
 			"typeLabel": "string",
-			"required": false,
+			"required": true,
 			"id": "key",
 			"order": 3
 		},
@@ -37,7 +37,7 @@
 			"name": "value",
 			"type": "string",
 			"typeLabel": "string",
-			"required": false,
+			"required": true,
 			"id": "value",
 			"order": 4
 		},
@@ -53,7 +53,7 @@
 			"name": "projectName",
 			"type": "string",
 			"typeLabel": "string",
-			"required": false,
+			"required": true,
 			"id": "projectName",
 			"order": 6
 		}

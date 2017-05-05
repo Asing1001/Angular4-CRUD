@@ -50,7 +50,7 @@
             <template [ngIf]="envProp.isEditing">
                 <td class="btn-group-sm">
                     <button class="btn btn-fab btn-danger" (click)="envProp.isEditing=false;revertEnvProp(envProp)"><i class="material-icons">stop</i></button>
-                    <button class="btn btn-fab btn-success" (click)="envProp.isEditing=false;saveEnvProps(envProp);"><i class="material-icons">done</i></button>
+                    <button class="btn btn-fab btn-success" (click)="saveEnvProps(envProp);"><i class="material-icons">done</i></button>
                 </td>
                 <td>
                     <input datePicker type="text" class="form-control" name="date" [(ngModel)]="envProp.date" (ngModelChange)="envProp.date=$event">
@@ -70,9 +70,9 @@
 					</select>
                 </td>
                 <td><input type="text" [(ngModel)]="envProp.key" class="form-control" placeholder="Key"></td>
-                <td *ngIf="envProp.action!=='Remove'"><input type="text" [(ngModel)]="envProp.value" class="form-control" placeholder="Value"></td>
+                <td><input *ngIf="envProp.action!=='Remove'" type="text" [(ngModel)]="envProp.value" class="form-control" placeholder="Value"></td>
                 <td>
-                    <div class="row">
+                    <div class="row" *ngIf="envProp.action!=='Remove'">
                         <div class="btn-group-sm col-xs-2">
                             <button class="btn btn-fab btn-success" (click)="envProp.conditions.push({key:key, value:value});key=value=''"><i class="material-icons">add</i></button>
                         </div>
@@ -92,7 +92,7 @@
                 <td class="btn-group-sm">
                     <button class="btn btn-fab btn-danger" (click)="deleteEnvProp(envProp);"><i class="material-icons">delete</i></button>
                     <button class="btn btn-fab btn-success" (click)="envProp.original=copyObject(envProp);envProp.isEditing=true;"><i class="material-icons">mode_edit</i></button>
-                    <button class="btn btn-fab btn-primary" (click)="copyEnvProp(envProp)"><i class="material-icons" style="left:38%;font-size:12px;font-family:sans-serif">COPY</i></button>
+                    <button class="btn btn-fab btn-primary" (click)="copyEnvProp(envProp, index)"><i class="material-icons" style="left:38%;font-size:12px;font-family:sans-serif">COPY</i></button>
                 </td>
                 <td class="plain-text">{{envProp.date}}</td>
                 <td class="plain-text">{{envProp.action}}</td>
