@@ -89,7 +89,7 @@ export class EnvEditComponent implements OnInit {
   }
 
   addNewEnvProp() {
-    this.envProps.push({ env: 'QAT', action: 'Add', isEditing: true, date: this.dateRange.to, conditions: [], projectName: this.projectName });
+    this.envProps.unshift({ env: 'QAT', action: 'Add', isEditing: true, date: this.dateRange.to, conditions: [], projectName: this.projectName });
   }
 
   addCondition(envProp: EnvProperty) {
