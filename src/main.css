@@ -22,3 +22,8 @@ td .form-group {
 td.plain-text {
     line-height: 37px !important;
 }
+
+td.function-btns{
+    width: 150px;
+    display: inline-block;
+}

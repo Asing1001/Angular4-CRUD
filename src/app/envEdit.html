@@ -48,7 +48,7 @@
     <tbody>
         <tr *ngFor="let envProp of envProps; let index = index;">
             <template [ngIf]="envProp.isEditing">
-                <td class="btn-group-sm">
+                <td class="btn-group-sm function-btns">
                     <button class="btn btn-fab btn-danger" (click)="envProp.isEditing=false;revertEnvProp(envProp)"><i class="material-icons">stop</i></button>
                     <button class="btn btn-fab btn-success" (click)="saveEnvProps(envProp);"><i class="material-icons">done</i></button>
                 </td>
@@ -89,7 +89,7 @@
                 </td>
             </template>
             <template [ngIf]="!envProp.isEditing">
-                <td class="btn-group-sm">
+                <td class="btn-group-sm function-btns">
                     <button class="btn btn-fab btn-danger" (click)="deleteEnvProp(envProp);"><i class="material-icons">delete</i></button>
                     <button class="btn btn-fab btn-success" (click)="envProp.original=copyObject(envProp);envProp.isEditing=true;"><i class="material-icons">mode_edit</i></button>
                     <button class="btn btn-fab btn-primary" (click)="copyEnvProp(envProp, index)"><i class="material-icons" style="left:38%;font-size:12px;font-family:sans-serif">COPY</i></button>
