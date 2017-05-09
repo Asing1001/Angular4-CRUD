@@ -56,7 +56,7 @@
                     <input datePicker type="text" class="form-control" name="date" [(ngModel)]="envProp.date" (ngModelChange)="envProp.date=$event">
                 </td>
                 <td>
-                    <select class="form-control" [(ngModel)]="envProp.action">
+                    <select class="form-control" [(ngModel)]="envProp.action" (ngModelChange)="$event==='Remove' && envProp.value='-'">
 						<option>Add</option>              
 						<option>Edit</option>              
 						<option>Remove</option>              
