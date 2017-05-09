@@ -16,7 +16,6 @@ export class EnvEditComponent implements OnInit {
   envProps: Array<EnvProperty>;
   dateRange = { from: moment().subtract(5, 'days').format("YYYY-MM-DD"), to: moment().add(1, 'days').format("YYYY-MM-DD") };
 
-
   constructor(private route: ActivatedRoute, private toasterService: ToasterService) {
   }
 
@@ -52,8 +51,24 @@ export class EnvEditComponent implements OnInit {
     }
   }
 
-  saveEnvProps(envProp) {
-    dpd.envprops.post(envProp).then(({id}:EnvProperty) => {
+  getEnvPropParserError({ key, value }: EnvProperty) {
+    var parser = new DOMParser();
+    var result = parser.parseFromString(`<${key}>${value}</${key}>`, 'text/xml');
+    return result.querySelector('parsererror');
+  }
+
+  saveEnvProps(envProp: EnvProperty) {
+    var paserError = this.getEnvPropParserError(envProp)
+    if (paserError) {
+      this.toasterService.pop('error', "Your input has xml parsing error, please check again")
+      return
+    }
+
+    if(/&amp;(?!amp;)/.test(envProp.value) && !confirm('Your input contains "&amp;" Please confirm you only need one "amp;"')){
+      return;
+    }
+
+    dpd.envprops.post(envProp).then(({ id }: EnvProperty) => {
       envProp.id = id;
       envProp.isEditing = false;
       this.toasterService.pop('info', 'Upadate successfully !');
@@ -83,7 +98,7 @@ export class EnvEditComponent implements OnInit {
       const index = this.envProps.indexOf(envProp);
       this.envProps.splice(index, 1);
     }).fail(error => {
-      this.toasterService.pop('error',  JSON.stringify(error))
+      this.toasterService.pop('error', JSON.stringify(error))
       console.error('deleteEnvProp got error:', error);
     });
   }
