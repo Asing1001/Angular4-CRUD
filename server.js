@@ -23,4 +23,4 @@ require('deployd').attach(server, {
 app.use(server.handleRequest);
 
 // start server
-server.listen(PORT);
+server.listen(PORT, ()=>console.log(`app listen at ${PORT}`));
