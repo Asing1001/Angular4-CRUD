@@ -47,7 +47,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let envProp of envProps; let index = index;">
-            <template [ngIf]="envProp.isEditing">
+            <ng-template [ngIf]="envProp.isEditing">
                 <td class="btn-group-sm function-btns">
                     <button class="btn btn-fab btn-danger" (click)="envProp.isEditing=false;revertEnvProp(envProp)"><i class="material-icons">stop</i></button>
                     <button class="btn btn-fab btn-success" (click)="saveEnvProps(envProp);"><i class="material-icons">done</i></button>
@@ -87,8 +87,8 @@
                         <div class="col-xs-5"><input type="text" [(ngModel)]="condition.value" class="form-control" placeholder="value"></div>
                     </div>
                 </td>
-            </template>
-            <template [ngIf]="!envProp.isEditing">
+            </ng-template>
+            <ng-template [ngIf]="!envProp.isEditing">
                 <td class="btn-group-sm function-btns">
                     <button class="btn btn-fab btn-danger" (click)="deleteEnvProp(envProp);"><i class="material-icons">delete</i></button>
                     <button class="btn btn-fab btn-success" (click)="envProp.original=copyObject(envProp);envProp.isEditing=true;"><i class="material-icons">mode_edit</i></button>
@@ -104,7 +104,7 @@
                         {{index+1}}. key: {{condition.key}}, value: {{condition.value}}
                     </div>
                 </td>
-            </template>
+            </ng-template>
         </tr>
     </tbody>
 </table>
