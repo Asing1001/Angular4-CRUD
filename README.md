@@ -1,4 +1,4 @@
-# Angular2-DeploymentGuide
+# Angular4-CRUD
 ## Quick Start
 
 #### 1. Get the latest version
