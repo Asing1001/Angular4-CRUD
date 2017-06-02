@@ -1,10 +1,10 @@
-# Angular4-CRUD
+# Angular4-CRUD ![](https://travis-ci.org/Asing1001/Angular4-CRUD.svg?branch=master)
 ## Quick Start
 
 #### 1. Get the latest version
 ```shell
-git clone https://github.com/Asing1001/Angular2-DeploymentGuide.git Angular2-DeploymentGuide
-cd Angular2-DeploymentGuide
+git clone https://github.com/Asing1001/Angular4-CRUD.git Angular4-CRUD
+cd Angular4-CRUD
 ````
 #### 2. Run `npm install`
 
