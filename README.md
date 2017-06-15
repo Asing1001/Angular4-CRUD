@@ -30,5 +30,5 @@ npm run dev
 It will auto refresh by `webpack dev server`, service locate on [http://localhost:3002/](http://localhost:3002/)
 
 ## Reference
-Project built by `angular2`, `deployd`, `expressjs`
+Project built by `angular`, `deployd`, `expressjs`
 
