@@ -10,7 +10,7 @@ export class PreviewComponent implements OnInit {
     @Input()
     envProps: EnvProperty[];
     envPropsGroupedByEnv = {};
-    previousEnvProps: EnvProperty[];
+    copyEnvProps: EnvProperty[];
     content = '';
     constructor() { }
 
@@ -19,18 +19,18 @@ export class PreviewComponent implements OnInit {
     }
 
     ngDoCheck() {
-        if (!this.envProps || JSON.stringify(this.previousEnvProps) === JSON.stringify(this.envProps)) {
+        if (!this.envProps || JSON.stringify(this.copyEnvProps) === JSON.stringify(this.envProps)) {
             return;
         }
 
         //deep copy envProps array for next compare
-        this.previousEnvProps = $.extend(true, [], this.envProps);
+        this.copyEnvProps = JSON.parse(JSON.stringify(this.envProps));
         this.groupEnvProps();
         this.generateContent();
     }
 
     private groupEnvProps() {
-        this.envPropsGroupedByEnv = this.groupBy(this.envProps, 'env');
+        this.envPropsGroupedByEnv = this.groupBy(this.copyEnvProps, 'env');
         for (let key in this.envPropsGroupedByEnv) {
             const singleEnvProps = this.getFinalStatus(this.envPropsGroupedByEnv[key]);
             this.envPropsGroupedByEnv[key] = this.groupBy(singleEnvProps, 'action')
@@ -97,7 +97,7 @@ export class PreviewComponent implements OnInit {
 
     private getDistinctExtendTarget() {
         let result = '';
-        const envPropsWithoutEdit = this.envProps.filter(({ action }) => action !== 'Edit');
+        const envPropsWithoutEdit = this.copyEnvProps.filter(({ action }) => action !== 'Edit');
         if (envPropsWithoutEdit.length > 0) {
             const envPropsGroupByActions = this.groupBy(this.getFinalStatus(envPropsWithoutEdit), 'action');
             for (let action in envPropsGroupByActions) {
