@@ -9,7 +9,7 @@ script:
   - sed -i -e 's/public\///' .gitignore
   - git add --all .
   - git commit --message "Automatically update from travis-ci"
-  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" packages
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:packages
 
 env:
   global:
