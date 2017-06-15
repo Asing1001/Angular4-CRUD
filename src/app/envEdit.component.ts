@@ -58,13 +58,14 @@ export class EnvEditComponent implements OnInit {
   }
 
   saveEnvProps(envProp: EnvProperty) {
+    envProp.conditions = envProp.conditions.filter(({ key }) => key);
     var paserError = this.getEnvPropParserError(envProp)
     if (paserError) {
       this.toasterService.pop('error', "Your input has xml parsing error, please check again")
       return
     }
 
-    if(/&amp;(?!amp;)/.test(envProp.value) && !confirm('Your input contains "&amp;" Please confirm you only need one "amp;"')){
+    if (/&amp;(?!amp;)/.test(envProp.value) && !confirm('Your input contains "&amp;" Please confirm you only need one "amp;"')) {
       return;
     }
 
@@ -80,7 +81,7 @@ export class EnvEditComponent implements OnInit {
 
   copyEnvProp(envProp, index): void {
     let copyEnvProp: EnvProperty = this.copyObject(envProp);
-    copyEnvProp.isEditing = true;
+    this.startEditing(copyEnvProp);
     delete copyEnvProp.id;
     this.envProps.splice(index + 1, 0, copyEnvProp);
   }
@@ -104,7 +105,16 @@ export class EnvEditComponent implements OnInit {
   }
 
   addNewEnvProp() {
-    this.envProps.unshift({ env: 'QAT', action: 'Add', isEditing: true, date: this.dateRange.to, conditions: [], projectName: this.projectName });
+    const defaultEnvProps = { env: 'QAT', action: 'Add', date: this.dateRange.to, projectName: this.projectName };
+    this.startEditing(defaultEnvProps);
+    this.envProps.unshift(defaultEnvProps);
+  }
+
+  startEditing(envProp: EnvProperty) {
+    envProp.isEditing = true;
+    if (!envProp.conditions || envProp.conditions.length === 0) {
+      envProp.conditions.push({ key: "", value: "" });
+    }
   }
 
   addCondition(envProp: EnvProperty) {

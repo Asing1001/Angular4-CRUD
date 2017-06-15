@@ -30,7 +30,7 @@ export class PreviewComponent implements OnInit {
     private getFinalStatus(envArray: EnvProperty[]) {
         let result: EnvProperty[] = [];
         envArray.forEach((envProp: EnvProperty) => {
-            const matchedEnvProp = result.find(({ key , conditions}) => key === envProp.key && JSON.stringify(conditions) === JSON.stringify(envProp.conditions));
+            const matchedEnvProp = result.find(({ key, conditions }) => key === envProp.key && JSON.stringify(conditions) === JSON.stringify(envProp.conditions));
             if (matchedEnvProp) {
                 if (matchedEnvProp.action === 'Edit' && envProp.action === 'Add')
                     matchedEnvProp.action = 'Add';
@@ -76,7 +76,7 @@ export class PreviewComponent implements OnInit {
             result += '\r\n';
         }
         return result;
-    }    
+    }
 
     private getGroupedEnvProps() {
         let envPropsGroupedByEnv = this.groupBy(this.copyEnvProps, 'env');
@@ -88,11 +88,11 @@ export class PreviewComponent implements OnInit {
     }
 
     getCondictionString(conditions: KeyValPair[]) {
-        if(!conditions || conditions.length===0){
+        if (!conditions || conditions.length === 0) {
             return '';
         }
-        const conditionString = conditions.map(({key,value})=>`'$(${key})'=='${value}'`).join(' AND ');
-        return ` Condition="${conditionString}"`
+        const conditionString = conditions.filter(({ key }) => key).map(({ key, value }) => `'$(${key})'=='${value}'`).join(' AND ');
+        return conditionString ? ` Condition="${conditionString}"` : "";
     }
 
     private getDistinctExtendTarget() {

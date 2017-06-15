@@ -72,16 +72,10 @@
                 <td><input type="text" [(ngModel)]="envProp.key" class="form-control" placeholder="Key"></td>
                 <td><input *ngIf="envProp.action!=='Remove'" type="text" [(ngModel)]="envProp.value" class="form-control" placeholder="Value"></td>
                 <td>
-                    <div class="row" *ngIf="envProp.action!=='Remove'">
+                    <div class="row" *ngFor="let condition of envProp.conditions; let index = index;" >
                         <div class="btn-group-sm col-xs-2">
-                            <button class="btn btn-fab btn-success" (click)="envProp.conditions.push({key:key, value:value});key=value=''"><i class="material-icons">add</i></button>
-                        </div>
-                        <div class="col-xs-5"><input type="text" [(ngModel)]="key" class="form-control" placeholder="key"></div>
-                        <div class="col-xs-5"><input type="text" [(ngModel)]="value" class="form-control" placeholder="value"></div>                        
-                    </div>
-                    <div class="row" *ngFor="let condition of envProp.conditions; let index = index;">
-                        <div class="btn-group-sm col-xs-2">
-                            <button class="btn btn-fab btn-danger" (click)="envProp.conditions.splice(index,1)"><i class="material-icons">remove</i></button>
+                            <button *ngIf="index==0" class="btn btn-fab btn-success" (click)="envProp.conditions.unshift({key:key, value:value});key=value=''"><i class="material-icons">add</i></button>
+                            <button *ngIf="index>0" class="btn btn-fab btn-danger" (click)="envProp.conditions.splice(index,1)"><i class="material-icons">remove</i></button>
                         </div>
                         <div class="col-xs-5"><input type="text" [(ngModel)]="condition.key" class="form-control" placeholder="key"></div>
                         <div class="col-xs-5"><input type="text" [(ngModel)]="condition.value" class="form-control" placeholder="value"></div>
@@ -91,7 +85,7 @@
             <ng-template [ngIf]="!envProp.isEditing">
                 <td class="btn-group-sm function-btns">
                     <button class="btn btn-fab btn-danger" (click)="deleteEnvProp(envProp);"><i class="material-icons">delete</i></button>
-                    <button class="btn btn-fab btn-success" (click)="envProp.original=copyObject(envProp);envProp.isEditing=true;"><i class="material-icons">mode_edit</i></button>
+                    <button class="btn btn-fab btn-success" (click)="envProp.original=copyObject(envProp);startEditing(envProp);"><i class="material-icons">mode_edit</i></button>
                     <button class="btn btn-fab btn-primary" (click)="copyEnvProp(envProp, index)"><i class="material-icons" style="left:38%;font-size:12px;font-family:sans-serif">COPY</i></button>
                 </td>
                 <td class="plain-text">{{envProp.date}}</td>
