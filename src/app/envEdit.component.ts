@@ -113,7 +113,7 @@ export class EnvEditComponent implements OnInit {
   startEditing(envProp: EnvProperty) {
     envProp.isEditing = true;
     if (!envProp.conditions || envProp.conditions.length === 0) {
-      envProp.conditions.push({ key: "", value: "" });
+      envProp.conditions = [{ key: "", value: "" }];
     }
   }
 
