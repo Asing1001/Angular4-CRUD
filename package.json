@@ -2,7 +2,7 @@
   "name": "deployment-guide",
   "version": "1.0.0",
   "scripts": {
-    "start": "npm run build && node server.js",
+    "start": "node server.js",
     "dev": "concurrently \"node server.js\" \"npm run webpack\"",
     "webpack": "webpack-dev-server --inline --progress --port 3002",
     "build": "rimraf public && webpack --config config/webpack.prod.js --progress --profile --bail"

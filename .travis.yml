@@ -4,17 +4,13 @@ cache: yarn
 before_script:
   - git config --global user.name "Andy Chen"
   - git config --global user.email "shinningstar1001@gmail.com"
-  - git clone --branch packages https://${GH_REF} ${PACKAGES_FOLDER}
-  - rm -rf ${PACKAGES_FOLDER}/*
 script:
   - npm run build   
-  - cp -rf dist/. ${PACKAGES_FOLDER}/.
-  - cd ${PACKAGES_FOLDER}
+  - sed -i -e 's/public\///' .gitignore
   - git add --all .
   - git commit --message "Automatically update from travis-ci"
-  - git push --quiet "https://${GH_TOKEN}@${GH_REF}" packages
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" packages
 
 env:
   global:
     - GH_REF: github.com/Asing1001/Angular4-CRUD.git
-    - PACKAGES_FOLDER: mypackages
