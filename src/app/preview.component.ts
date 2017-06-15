@@ -9,7 +9,6 @@ import * as moment from 'moment';
 export class PreviewComponent implements OnInit {
     @Input()
     envProps: EnvProperty[];
-    envPropsGroupedByEnv = {};
     copyEnvProps: EnvProperty[];
     content = '';
     constructor() { }
@@ -25,22 +24,13 @@ export class PreviewComponent implements OnInit {
 
         //deep copy envProps array for next compare
         this.copyEnvProps = JSON.parse(JSON.stringify(this.envProps));
-        this.groupEnvProps();
         this.generateContent();
-    }
-
-    private groupEnvProps() {
-        this.envPropsGroupedByEnv = this.groupBy(this.copyEnvProps, 'env');
-        for (let key in this.envPropsGroupedByEnv) {
-            const singleEnvProps = this.getFinalStatus(this.envPropsGroupedByEnv[key]);
-            this.envPropsGroupedByEnv[key] = this.groupBy(singleEnvProps, 'action')
-        }
     }
 
     private getFinalStatus(envArray: EnvProperty[]) {
         let result: EnvProperty[] = [];
         envArray.forEach((envProp: EnvProperty) => {
-            const matchedEnvProp = result.find(({ key }) => key === envProp.key);
+            const matchedEnvProp = result.find(({ key , conditions}) => key === envProp.key && JSON.stringify(conditions) === JSON.stringify(envProp.conditions));
             if (matchedEnvProp) {
                 if (matchedEnvProp.action === 'Edit' && envProp.action === 'Add')
                     matchedEnvProp.action = 'Add';
@@ -73,7 +63,8 @@ export class PreviewComponent implements OnInit {
 
     private getEnvPropsString(environment) {
         let result = '';
-        let targetEnvProps = this.envPropsGroupedByEnv[environment];
+        let envPropsGroupedByEnv = this.getGroupedEnvProps();
+        let targetEnvProps = envPropsGroupedByEnv[environment];
         if (targetEnvProps) {
             result += `For ${environment}:\r\n`;
             for (let action in targetEnvProps) {
@@ -85,6 +76,15 @@ export class PreviewComponent implements OnInit {
             result += '\r\n';
         }
         return result;
+    }    
+
+    private getGroupedEnvProps() {
+        let envPropsGroupedByEnv = this.groupBy(this.copyEnvProps, 'env');
+        for (let key in envPropsGroupedByEnv) {
+            const singleEnvProps = this.getFinalStatus(envPropsGroupedByEnv[key]);
+            envPropsGroupedByEnv[key] = this.groupBy(singleEnvProps, 'action')
+        }
+        return envPropsGroupedByEnv;
     }
 
     getCondictionString(conditions: KeyValPair[]) {
