@@ -2,7 +2,6 @@ public/
 .dpd/
 dist/
 data/
-*.map
 typings/
 node_modules/
 built/*
