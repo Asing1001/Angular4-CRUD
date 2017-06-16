@@ -1,0 +1,105 @@
+<toaster-container></toaster-container>
+<div class="row">
+    <form class="form-inline col-xs-12">
+        <div class="form-group label-floating">
+            <label class="control-label" for="from">From</label>
+            <div class="input-group">
+                <input datePicker type="text" class="form-control" name="from" [(ngModel)]="dateRange.from" (ngModelChange)="dateRange.from=$event;getEnvProps()">
+                <span class="input-group-btn">                
+              </span>
+            </div>
+        </div>
+        <div class="form-group label-floating">
+            <label class="control-label" for="to">To</label>
+            <div class="input-group">
+                <input datePicker type="text" class="form-control" name="to" [(ngModel)]="dateRange.to" (ngModelChange)="dateRange.to=$event;getEnvProps()">
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-fab btn-fab-mini" (click)="getEnvProps()">
+                  <i class="material-icons">refresh</i>
+                </button>
+              </span>
+            </div>
+        </div>
+    </form>
+</div>
+<button class="btn btn-raised btn-default" (click)="addNewEnvProp()"><span class="glyphicon glyphicon-plus"></span></button>
+<button class="btn btn-raised btn-default glyphicon-size" (click)="downloadDeploymentGuide()">Download</button>
+<table class="table table-bordered">
+    <colgroup>
+        <col width="10%">
+        <col width="10%">
+        <col width="10%">
+        <col width="10%">
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+    </colgroup>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Deploy Date</th>
+            <th>Action</th>
+            <th>Environment</th>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Condition</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let envProp of envProps; let index = index;">
+            <ng-template [ngIf]="envProp.isEditing">
+                <td class="btn-group-sm function-btns">
+                    <button class="btn btn-fab btn-danger" (click)="envProp.isEditing=false;revertEnvProp(envProp)"><i class="material-icons">stop</i></button>
+                    <button class="btn btn-fab btn-success" (click)="saveEnvProps(envProp);"><i class="material-icons">done</i></button>
+                </td>
+                <td>
+                    <input datePicker type="text" class="form-control" name="date" [(ngModel)]="envProp.date" (ngModelChange)="envProp.date=$event">
+                </td>
+                <td>
+                    <select class="form-control" [(ngModel)]="envProp.action" (ngModelChange)="$event==='Remove' && envProp.value='-'">
+						<option>Add</option>              
+						<option>Edit</option>              
+						<option>Remove</option>              
+					</select>
+                </td>
+                <td>
+                    <select class="form-control" [(ngModel)]="envProp.env">
+						<option>QAT</option>              
+						<option>UAT</option>              
+						<option>PRD</option>              
+					</select>
+                </td>
+                <td><input type="text" [(ngModel)]="envProp.key" class="form-control" placeholder="Key"></td>
+                <td><input *ngIf="envProp.action!=='Remove'" type="text" [(ngModel)]="envProp.value" class="form-control" placeholder="Value"></td>
+                <td>
+                    <div class="row" *ngFor="let condition of envProp.conditions; let index = index;" >
+                        <div class="btn-group-sm col-xs-2">
+                            <button *ngIf="index==0" class="btn btn-fab btn-success" (click)="envProp.conditions.unshift({key:key, value:value});key=value=''"><i class="material-icons">add</i></button>
+                            <button *ngIf="index>0" class="btn btn-fab btn-danger" (click)="envProp.conditions.splice(index,1)"><i class="material-icons">remove</i></button>
+                        </div>
+                        <div class="col-xs-5"><input type="text" [(ngModel)]="condition.key" class="form-control" placeholder="key"></div>
+                        <div class="col-xs-5"><input type="text" [(ngModel)]="condition.value" class="form-control" placeholder="value"></div>
+                    </div>
+                </td>
+            </ng-template>
+            <ng-template [ngIf]="!envProp.isEditing">
+                <td class="btn-group-sm function-btns">
+                    <button class="btn btn-fab btn-danger" (click)="deleteEnvProp(envProp);"><i class="material-icons">delete</i></button>
+                    <button class="btn btn-fab btn-success" (click)="envProp.original=copyObject(envProp);startEditing(envProp);"><i class="material-icons">mode_edit</i></button>
+                    <button class="btn btn-fab btn-primary" (click)="copyEnvProp(envProp, index)"><i class="material-icons" style="left:38%;font-size:12px;font-family:sans-serif">COPY</i></button>
+                </td>
+                <td class="plain-text">{{envProp.date}}</td>
+                <td class="plain-text">{{envProp.action}}</td>
+                <td class="plain-text">{{envProp.env}}</td>
+                <td class="plain-text">{{envProp.key}}</td>
+                <td class="plain-text">{{envProp.value}}</td>
+                <td class="plain-text">
+                    <div *ngFor="let condition of envProp.conditions; let index = index;">
+                        {{index+1}}. key: {{condition.key}}, value: {{condition.value}}
+                    </div>
+                </td>
+            </ng-template>
+        </tr>
+    </tbody>
+</table>
+<preview-deployment-guide [envProps]="envProps" style="white-space:pre-wrap"></preview-deployment-guide>
