@@ -1,4 +1,6 @@
 # Angular4-CRUD ![](https://travis-ci.org/Asing1001/Angular4-CRUD.svg?branch=master)
+[Live Demo](https://ng-crud.herokuapp.com)
+
 ## Quick Start
 
 #### 1. Get the latest version
