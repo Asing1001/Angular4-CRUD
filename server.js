@@ -16,7 +16,7 @@ app.get('/envedit/:projectname', (req, res) => {
 require('deployd').attach(server, {
     socketIo: io, // if not provided, attach will create one for you.
     env: ENV,
-    db: { host: 'localhost', port: 27017, name: 'deploymentguide' }
+    db: { connectionString : process.env.MONGODB_URI || 'mongodb://localhost:27017/deploymentguide' }
 });
 
 // After attach, express can use server.handleRequest as middleware
