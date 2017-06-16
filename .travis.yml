@@ -5,14 +5,11 @@ before_script:
   - git config --global user.name "Andy Chen"
   - git config --global user.email "shinningstar1001@gmail.com"
   - git clone --branch packages https://${GH_REF} ${PACKAGE_FOLDER}
-  - cd ${PACKAGE_FOLDER}
-  - rm -rf *
-  - cd ..
 
 script:
-  - rsync -av --exclude node_modules/ --exclude .git/ ${TRAVIS_BUILD_DIR}/ ${PACKAGE_FOLDER}/
   - cd ${PACKAGE_FOLDER}
-  - find .
+  - rm -rf *
+  - rsync -av --exclude ${PACKAGE_FOLDER}/ --exclude node_modules/ --exclude .git/ ../ .
   - sed -i -e 's/public\///' .gitignore
   - git add -A
   - git commit --message "${TRAVIS_COMMIT_MESSAGE} [ci skip]"
