@@ -10,9 +10,9 @@ before_script:
   - cd ..
 
 script:
-  - npm run build   
-  - rsync -av --exclude node_modules/ --exclude .git/ ${TRAVIS_BUILD_DIR} ${PACKAGE_FOLDER}/
+  - rsync -av --exclude node_modules/ --exclude .git/ ${TRAVIS_BUILD_DIR}/ ${PACKAGE_FOLDER}/
   - cd ${PACKAGE_FOLDER}
+  - find .
   - sed -i -e 's/public\///' .gitignore
   - git add -A
   - git commit --message "${TRAVIS_COMMIT_MESSAGE} [ci skip]"
