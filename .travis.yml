@@ -8,10 +8,11 @@ before_script:
 
 script:
   - npm run build   
-  - rsync -av --progress . /${PACKAGE_FOLDER} --exclude ${PACKAGE_FOLDER} 
   - cd ${PACKAGE_FOLDER}
+  - rm -rf *
+  - rsync -av --progress ../ . --exclude ${PACKAGE_FOLDER} 
   - sed -i -e 's/public\///' .gitignore
-  - git add --all .
+  - git add -A
   - git commit --message "Update from travis ${TRAVIS_COMMIT_MESSAGE} [ci skip]"
   - git push --force "https://${GH_TOKEN}@${GH_REF}" packages:packages
 
