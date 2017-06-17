@@ -1,5 +1,6 @@
 # Angular4-CRUD ![](https://travis-ci.org/Asing1001/Angular4-CRUD.svg?branch=master)
-[Live Demo](https://ng-crud.herokuapp.com)
+[Live Demo](https://ng-crud.herokuapp.com)  
+Demonstrate CRUD in Angular4 by making an environment variable management tool. 
 
 ## Requirements
 1. Nodejs
